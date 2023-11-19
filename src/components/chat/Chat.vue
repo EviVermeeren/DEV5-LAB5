@@ -20,42 +20,51 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-
-import axios from "axios";
+import axios from "axios"; // Import Axios for making HTTP requests
 
 let message = ref("");
+
+// Reactive data for storing all messages (no reload needed)
 let allMessages = reactive({
   data: [],
 });
 
+// Fetch messages from the API when the component is mounted (loaded)
 onMounted(async () => {
   try {
     const response = await axios.get(
       "https://dev5-lab4-jjmr.onrender.com/api/v1/messages"
     );
+    // Update the allMessages data with the fetched messages
     allMessages.data = response.data.data.messages;
   } catch (error) {
+    // Log an error if fetching messages fails
     console.error("Error fetching messages:", error);
   }
 });
 
+// Function to send a new message
 async function sendMessage() {
+  // Check if the message input is not empty before sending
   if (message.value !== "") {
     try {
+      // Send a POST request to add a new message to the database
       const response = await axios.post(
         "https://dev5-lab4-jjmr.onrender.com/api/v1/messages",
         {
           message: {
-            user: "YourUsername", // Replace with the actual user
+            user: "YourUsername", // Replace with the actual user name when you have user authentication
             text: message.value,
           },
         }
       );
 
-      // Add the new message at the top of the list
+      // Add the new message at the top of the list (unshift adds to the beginning of the array)
+      // This is done so that the new message appears at the top of the list without reloading the page
+      // When the page is reloaded, the messages are fetched again from the API and the new message will appear at the bottom
       allMessages.data.unshift(response.data.data.message);
 
-      // Clear the input field after sending
+      // Clear the input field after sending the message
       message.value = "";
     } catch (error) {
       console.error("Error sending message:", error);
