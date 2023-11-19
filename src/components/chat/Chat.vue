@@ -21,14 +21,13 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 
-import axios from "axios"; // Import Axios for making HTTP requests
+import axios from "axios";
 
 let message = ref("");
 let allMessages = reactive({
   data: [],
 });
 
-// Fetch messages from the API when the component is mounted
 onMounted(async () => {
   try {
     const response = await axios.get(
@@ -39,6 +38,30 @@ onMounted(async () => {
     console.error("Error fetching messages:", error);
   }
 });
+
+async function sendMessage() {
+  if (message.value !== "") {
+    try {
+      const response = await axios.post(
+        "https://dev5-lab4-jjmr.onrender.com/api/v1/messages",
+        {
+          message: {
+            user: "YourUsername", // Replace with the actual user
+            text: message.value,
+          },
+        }
+      );
+
+      // Add the new message at the top of the list
+      allMessages.data.unshift(response.data.data.message);
+
+      // Clear the input field after sending
+      message.value = "";
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  }
+}
 </script>
 
 <style scoped></style>
