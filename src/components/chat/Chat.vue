@@ -1,11 +1,8 @@
 <template>
   <div>
     <ul>
-      <li v-for="m in allMessages.data">
-        <strong>{{ m.user }}</strong>
-        <div>
-          {{ m.text }}
-        </div>
+      <li v-for="m in allMessages.data" :key="m._id">
+        <strong>{{ m.user }}:</strong> {{ m.text }}
       </li>
     </ul>
   </div>
@@ -14,8 +11,8 @@
     <input
       v-model="message"
       type="text"
-      placeholder="Type your mesage here"
-      @keyup.input.enter="sendMessage"
+      placeholder="Type your message here"
+      @keyup.enter="sendMessage"
     />
     <button @click="sendMessage">Send</button>
   </div>
@@ -23,22 +20,8 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import axios from "axios"; // Import Axios for making HTTP requests
 
 let message = ref("");
-
-let allMessages = reactive({
-  data: {
-    user: {
-      name: "user1",
-      text: "Hello",
-    },
-    user2: {
-      name: "user2",
-      text: "Hi",
-    },
-  },
-});
 
 function sendMessage() {
   if (message.value !== "") {
