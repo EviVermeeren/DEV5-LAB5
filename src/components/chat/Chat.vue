@@ -1,8 +1,11 @@
 <template>
   <div>
     <ul>
-      <li v-for="m in allMessages.data" :key="m._id">
-        <strong>{{ m.user }}:</strong> {{ m.text }}
+      <li class="list" v-for="m in allMessages.data" :key="m._id">
+        <div class="message">
+          <strong class="username">{{ m.user }}:</strong>
+          <span class="text">{{ m.text }}</span>
+        </div>
       </li>
     </ul>
   </div>
@@ -73,4 +76,24 @@ async function sendMessage() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.list {
+  list-style: none;
+}
+.message {
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  margin: 5px;
+  padding: 10px;
+  list-style: none;
+}
+
+.username {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.text {
+  margin-left: 10px;
+}
+</style>
